@@ -1,0 +1,119 @@
+.songs_title {
+  margin: 0.5em 0 60px 0;
+  padding-left: 0.5em;
+  font-size: 2em;
+  font-weight: normal;
+  border-left: 3px solid #df3436;
+}
+.songs_playing {
+  position: absolute;
+  top: 26px;
+  right: 16px;
+  width: 20px;
+  height: 20px;
+  font-size: 0;
+  background-image: url("../assets/icon_playing.gif");
+  background-size: 100% 100%;
+}
+.songs_control {
+  position: absolute;
+  top: 72px;
+  left: 0;
+  width: 100%;
+}
+.songs_control:after {
+  content: " ";
+  clear: both;
+  display: block;
+  height: 0;
+  visibility: hidden;
+}
+.songs_control li {
+  float: left;
+  margin-left: -1px;
+  width: 50%;
+  text-align: center;
+  border: 1px solid #f0f0f0;
+  border-right: 0;
+  background: rgba(255, 255, 255, 0.9);
+}
+.songs_control li:active {
+  background: #ffffff;
+}
+.songs_control li:active a {
+  color: #6f6f6f;
+}
+.songs_control li a {
+  display: inline-block;
+  padding: 1em 0 1em 2em;
+  font-size: 0.8em;
+  color: #888888;
+  background-repeat: no-repeat;
+  background-position: 0 center;
+  background-size: auto 1em;
+  background-origin: content;
+}
+.songs_control li:nth-child(1) a {
+  background-image: url("../assets/icon_play_order.png");
+}
+.songs_control li:nth-child(2) a {
+  background-image: url("../assets/icon_play_random.png");
+}
+.songs_control li:nth-child(3) a {
+  background-image: url("../assets/icon_play_history.png");
+}
+.songs_control_history li {
+  width: 33.33%;
+}
+.songs_control_fixed {
+  position: fixed;
+  top: 0;
+}
+.songs_list {
+  background: url("../assets/slist_bg.png") 0 bottom no-repeat;
+  background-size: 100% auto;
+  background-attachment: fixed;
+}
+.songs_list li {
+  margin-left: 3em;
+  padding: 0.4em 0;
+  border-bottom: 1px solid #f0f0f0;
+  background: url("../assets/icon_music.png") right center no-repeat;
+  background-size: auto 40%;
+}
+.songs_list li span {
+  float: left;
+  display: block;
+  margin-left: -3em;
+  width: 3em;
+  height: 3em;
+  line-height: 3em;
+  color: #888888;
+  text-align: center;
+}
+.songs_list li:nth-child(1) span,
+.songs_list li:nth-child(2) span,
+.songs_list li:nth-child(3) span {
+  color: #df3436;
+}
+.songs_list li h4,
+.songs_list li small {
+  width: 80%;
+  height: 1.5em;
+  line-height: 1.5em;
+  overflow: hidden;
+}
+.songs_list li h4 {
+  font-weight: normal;
+}
+.songs_list li small {
+  display: block;
+  color: #888888;
+}
+.copyright {
+  display: block;
+  padding: 1em;
+  font-size: 0.6em;
+  color: #888888;
+  text-align: center;
+}

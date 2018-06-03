@@ -1,0 +1,36 @@
+/* 公用样式v0.2 */
+* {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  -webkit-user-select: none;
+}
+body {
+  -webkit-touch-callout: none;
+  -webkit-text-size-adjust: none;
+  font-size: 1em;
+}
+img {
+  display: block;
+  max-width: 100%;
+}
+li {
+  list-style-type: none;
+}
+p {
+  word-wrap: break-word;
+  word-break: break-all;
+  text-align: justify;
+}
+a {
+  text-decoration: none;
+}
+
+/* 私有样式 */
+body {
+  color: #333;
+}
+a {
+  color: #333;
+}
