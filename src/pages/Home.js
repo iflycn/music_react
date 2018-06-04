@@ -13,16 +13,17 @@ class Home extends Component {
       history: null,
       slist: []
     };
+    this.$_SetScrollTop = this.$_SetScrollTop.bind(this);
   }
 
   // lifecycle
   componentDidMount() {
-    // 此处导致输出错误，待修复，可能原因：没有卸载
-    // window.addEventListener("scroll", () => {
-    //   this.setState({ scrollTop: window.scrollY });
-    // });
+    window.addEventListener("scroll", this.$_SetScrollTop);
     this.setState({ history: localStorage.history });
     this.$_GetList();
+  }
+  componentWillUnmount() {
+    window.removeEventListener("scroll", this.$_SetScrollTop);
   }
 
   // methods
@@ -47,16 +48,19 @@ class Home extends Component {
         console.error(err);
       });
   }
+  $_SetScrollTop() {
+    this.setState({ scrollTop: window.scrollY });
+  }
 
   render() {
     // computed
-    let controlOrder = () => {
+    const controlOrder = () => {
       return `/detail/${this.$_GetIds()}`;
     }
-    let controlRandom = () => {
+    const controlRandom = () => {
       return `/detail/${util.arrShuffle(this.$_GetIds())}`;
     }
-    let controlHistory = () => {
+    const controlHistory = () => {
       return `/detail/${this.state.history || ""}`;
     }
 
@@ -64,13 +68,8 @@ class Home extends Component {
     return (
       <div className="home">
         <h1 className="songs_title">推荐歌单</h1>
-        {this.state.history && <Link to={controlHistory()} className="songs_playing">Songs Playing</Link>}
-        {this.state.slist.length > 1 && <ul className={(() => {
-          let className = "songs_control";
-          if (this.state.history) className += " songs_control_history";
-          if (this.state.scrollTop > 72) className += " songs_control_fixed";
-          return className;
-        })()}>
+        {false && <Link to={controlHistory()} className="songs_playing">Songs Playing</Link>}
+        {this.state.slist.length > 1 && <ul className={`songs_control${this.state.history ? " songs_control_history" : ""}${this.state.scrollTop > 72 ? " songs_control_fixed" : ""}`}>
           <li><Link to={controlOrder()}>顺序播放</Link></li>
           <li><Link to={controlRandom()}>随机播放</Link></li>
           {this.state.history && <li><Link to={controlHistory()}>历史播放</Link></li>}
