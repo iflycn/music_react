@@ -25,10 +25,6 @@ class Home extends Component {
   }
 
   // methods
-  $_FixAutoplay() {
-    this.$root.bus.$emit("GAudioFixAutoplay");
-    window.removeEventListener("touchend", this.$_FixAutoplay);
-  }
   $_CompleteNum(i) {
     i += 1;
     return util.fillZero(i);
