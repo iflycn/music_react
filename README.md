@@ -4,6 +4,9 @@
 ## 应用截图
 ![](https://github.com/iflycn/music_react/blob/master/public/screenshot.png)
 
+## 应用预览
+[https://iflycn.github.io/music_react/build/](https://iflycn.github.io/music_react/build/)
+
 ## 如何运行
 ``` bash
 # 克隆到本地
