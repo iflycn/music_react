@@ -28,7 +28,7 @@ class Detail extends Component {
 
   // lifecycle
   componentDidMount() {
-    const height = window.screen.availHeight - document.body.offsetHeight - 146;
+    const height = window.screen.availHeight / 2 - 146;
     this.setState({ lyricHeight: height >= 130 ? height : 130 });
     this.$_Init();
   }

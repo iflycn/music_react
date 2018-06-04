@@ -17,9 +17,10 @@ class Home extends Component {
 
   // lifecycle
   componentDidMount() {
-    window.addEventListener("scroll", () => {
-      this.setState({ scrollTop: window.scrollY });
-    });
+    // 此处导致输出错误，待修复，可能原因：没有卸载
+    // window.addEventListener("scroll", () => {
+    //   this.setState({ scrollTop: window.scrollY });
+    // });
     this.setState({ history: localStorage.history });
     this.$_GetList();
   }

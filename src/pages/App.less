@@ -36,3 +36,33 @@ body {
 a {
   color: @font-color;
 }
+
+/* 转场动画 */
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+@keyframes slideLeft {
+  0% {
+    transform: translateX(100vw);
+  }
+  100% {
+    transform: none;
+  }
+}
+
+div.home,
+div.detail {
+  width: 100vw;
+  min-height: 100vh;
+}
+div.home {
+  animation: fadeIn 0.4s ease-in-out 0s 1;
+}
+div.detail {
+  animation: slideLeft 0.2s ease-in-out 0s 1;
+}
