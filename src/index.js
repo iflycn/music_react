@@ -1,6 +1,6 @@
-import React from "react";
-import ReactDOM from "react-dom";
-import App from "./pages/App";
+import React from "react"
+import ReactDOM from "react-dom"
+import App from "./pages/App"
 
 console.log(
   "%c Gito Player %c Github.com/iflycn/music_react ",
@@ -10,5 +10,5 @@ console.log(
 
 ReactDOM.render(
   <App />,
-  document.getElementById("root")
+  document.getElementById("app")
 );

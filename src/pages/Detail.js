@@ -1,21 +1,30 @@
-import React, { Component } from "react";
-import "./Detail.less";
+import React, { Component } from "react"
+import "./Detail.less"
 
 class Detail extends Component {
+  //state
+  constructor(props) {
+    super(props);
+    this.state = {
+      lyricHeight: 0
+    };
+  }
+
   render() {
+    // template
     return (
       <div className="detail">
         <div className="song_wrap">
           <div className="song_disc song_needle">
             <div className="song_turn song_rotate song_paused">
-              <img src={require("../assets/disc_default.png")} alt="Song Cover" className="song_cover"/>
+              <img src={require("../assets/disc_default.png")} alt="Song Cover" className="song_cover" />
             </div>
             <span className="song_play"></span>
           </div>
         </div>
         <div className="song_range">
           <small>00:00/00:00</small>
-          <input type="range" max="100"/>
+          <input type="range" max="100" />
         </div>
         <div className="lyric">
           <h3>未知 - 歌手</h3>

@@ -1,5 +1,5 @@
 # Gito Player
-这是一个极简的 `React` 音乐播放器，使用了官方脚手架 `Create React App` 搭建、 `Webpack` 打包，涉及到的技术栈包括 `React`、`React Router`
+这是一个极简的 `React` 音乐播放器，使用了官方脚手架 `Create React App` 搭建、 `Webpack` 打包，涉及到的技术栈包括 `React`、`React Router`、`Axios`
 
 ## 应用截图
 ![](https://github.com/iflycn/music_react/blob/master/public/screenshot.png)
