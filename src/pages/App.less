@@ -30,14 +30,6 @@ a {
 /* 私有样式 */
 @font-color: #333;
 
-body {
-  color: @font-color;
-}
-a {
-  color: @font-color;
-}
-
-/* 转场动画 */
 @keyframes fadeIn {
   0% {
     opacity: 0;
@@ -53,6 +45,13 @@ a {
   100% {
     transform: none;
   }
+}
+
+body {
+  color: @font-color;
+}
+a {
+  color: @font-color;
 }
 
 div.home,

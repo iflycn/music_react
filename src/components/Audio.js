@@ -1,4 +1,5 @@
 import React, { Component } from "react"
+import "./Audio.less"
 
 class Audio extends Component {
   //state

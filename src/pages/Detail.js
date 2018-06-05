@@ -2,6 +2,7 @@ import React, { Component } from "react"
 import axios from "axios"
 import util from "../utils"
 import "./Detail.less"
+import Loading from "../components/Loading"
 
 class Detail extends Component {
   //state
@@ -169,6 +170,7 @@ class Detail extends Component {
     // template
     return (
       <div className="detail">
+        {this.state.duration === 0 && <Loading />}
         <div className="song_wrap">
           <div className={`song_disc${this.state.isPaused ? " song_needle" : ""}`} onClick={this.$_SongToggle}>
             <div className={`song_turn song_rotate${this.state.isPaused ? " song_paused" : ""}`}>

@@ -3,6 +3,7 @@ import { Link } from "react-router-dom"
 import axios from "axios"
 import util from "../utils"
 import "./Home.less"
+import Loading from "../components/Loading"
 
 class Home extends Component {
   // state
@@ -69,6 +70,7 @@ class Home extends Component {
     // template
     return (
       <div className="home">
+        {this.state.slist.length === 0 && <Loading />}
         <h1 className="songs_title">推荐歌单</h1>
         {false && <Link to={controlHistory()} className="songs_playing">Songs Playing</Link>}
         {this.state.slist.length > 1 && <ul className={`songs_control${this.state.history ? " songs_control_history" : ""}${this.state.scrollTop > 72 ? " songs_control_fixed" : ""}`}>
