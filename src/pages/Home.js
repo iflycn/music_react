@@ -27,6 +27,9 @@ class Home extends Component {
   }
 
   // methods
+  $_SetScrollTop() {
+    this.setState({ scrollTop: window.scrollY });
+  }
   $_CompleteNum(i) {
     i += 1;
     return util.fillZero(i);
@@ -39,17 +42,16 @@ class Home extends Component {
     return ids;
   }
   $_GetList() {
-    axios
-      .get(`${util.baseUrl}/slist`)
-      .then(res => {
-        this.setState({ slist: res.data });
-      })
-      .catch(err => {
-        console.error(err);
-      });
-  }
-  $_SetScrollTop() {
-    this.setState({ scrollTop: window.scrollY });
+    sessionStorage.slist ?
+      this.setState({ slist: JSON.parse(sessionStorage.slist) }) :
+      axios.get(`${util.baseUrl}/slist`)
+        .then(res => {
+          this.setState({ slist: res.data });
+          sessionStorage.slist = JSON.stringify(res.data);
+        })
+        .catch(err => {
+          console.error(err);
+        });
   }
 
   render() {
