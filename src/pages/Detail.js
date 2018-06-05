@@ -60,8 +60,8 @@ class Detail extends Component {
   $_StartTimer() {
     const duration = this.refs.audio.duration;
     const currentTime = this.refs.audio.currentTime;
-    this.setState({ duration: duration });
-    this.setState({ currentTime: currentTime });
+    duration && this.setState({ duration: duration });
+    currentTime && this.setState({ currentTime: currentTime });
     if (this.state.currentTime >= this.state.duration) {
       this.$_SongPause();
       this.state.ids.length > 1 && this.$_SongNext();
