@@ -36,15 +36,10 @@ class Detail extends Component {
     height = ~~((height - 43) / 32) * 32 + 43; // LH 32 PT 43
     this.setState({ lyricHeight: height > 139 ? height : 139 });
     this.$_Init();
-    clearInterval(this.state.timer);
-    this.setState({
-      timer: setInterval(() => {
-        this.setState({ line: this.$_StartTimer() });
-      }, 1e3)
-    });
+    this.timerID = setInterval(() => this.$_StartTimer(), 1e3);
   }
   componentWillUnmount() {
-    clearInterval(this.state.timer);
+    clearInterval(this.timerID);
   }
 
   // methods
@@ -63,25 +58,23 @@ class Detail extends Component {
     const currentTime = this.refs.audio.currentTime;
     duration && this.setState({ duration: duration });
     currentTime && this.setState({ currentTime: currentTime });
-    if (this.state.currentTime >= this.state.duration) {
-      this.$_SongPause();
-      this.state.ids.length > 1 && this.$_SongNext();
-    }
-    if (this.state.duration > 0 && this.state.autoPlay) {
+    if (duration > 0 && this.state.autoPlay) {
       this.setState({ autoPlay: !1 });
       this.$_SongPlay();
+    }
+    if (currentTime >= duration) {
+      this.$_SongPause();
+      this.state.ids.length > 1 && this.$_SongNext();
     }
     const lrc = this.$_FormatLrc(this.state.song.lyric);
     lrc.push({ time: duration * 1e3 });
     if (currentTime < lrc[0].time / 1e3) {
-      return 1e-3;
-    }
-    for (let i = 0; i < lrc.length - 1; i++) {
-      if (
-        currentTime >= lrc[i].time / 1e3 &&
-        currentTime < lrc[i + 1].time / 1e3
-      ) {
-        return i;
+      this.setState({ line: 1e-3 });
+    } else {
+      for (let i = 0; i < lrc.length - 1; i++) {
+        if (currentTime >= lrc[i].time / 1e3 && currentTime < lrc[i + 1].time / 1e3) {
+          this.setState({ line: i });
+        }
       }
     }
   }
