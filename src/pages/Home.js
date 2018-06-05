@@ -1,11 +1,13 @@
 import React, { Component } from "react"
 import { Link } from "react-router-dom"
 import axios from "axios"
+import { Listen } from "rectx"
+import StoreController from "../store"
 import util from "../utils"
 import "./Home.less"
 import Loading from "../components/Loading"
 
-class Home extends Component {
+class HomeInner extends Component {
   // state
   constructor(props) {
     super(props);
@@ -14,11 +16,13 @@ class Home extends Component {
       history: null,
       slist: []
     };
+    this.$_FixAutoplay = this.$_FixAutoplay.bind(this);
     this.$_SetScrollTop = this.$_SetScrollTop.bind(this);
   }
 
   // lifecycle
   componentDidMount() {
+    this.props.store.state.ids.length === 0 && window.addEventListener("touchend", this.$_FixAutoplay);
     window.addEventListener("scroll", this.$_SetScrollTop);
     this.setState({ history: localStorage.history });
     this.$_GetList();
@@ -28,6 +32,10 @@ class Home extends Component {
   }
 
   // methods
+  $_FixAutoplay(store) {
+    this.props.store.$_FixAutoplay();
+    window.removeEventListener("touchend", this.$_FixAutoplay);
+  }
   $_SetScrollTop() {
     this.setState({ scrollTop: window.scrollY });
   }
@@ -72,7 +80,7 @@ class Home extends Component {
       <div className="home">
         {this.state.slist.length === 0 && <Loading />}
         <h1 className="songs_title">推荐歌单</h1>
-        {false && <Link to={controlHistory()} className="songs_playing">Songs Playing</Link>}
+        {!this.props.store.state.isPaused && <Link to={controlHistory()} className="songs_playing">Songs Playing</Link>}
         {this.state.slist.length > 1 && <ul className={`songs_control${this.state.history ? " songs_control_history" : ""}${this.state.scrollTop > 72 ? " songs_control_fixed" : ""}`}>
           <li><Link to={controlOrder()}>顺序播放</Link></li>
           <li><Link to={controlRandom()}>随机播放</Link></li>
@@ -89,6 +97,18 @@ class Home extends Component {
         </ul>
         <a href="https://github.com/iflycn/music_react" className="copyright">Gito Player @ Github.com</a>
       </div>
+    );
+  }
+}
+
+class Home extends Component {
+  render() {
+    return (
+      <Listen to={[StoreController]}>
+        {store => (
+          <HomeInner store={store} />
+        )}
+      </Listen>
     );
   }
 }

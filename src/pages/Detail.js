@@ -1,33 +1,17 @@
 import React, { Component } from "react"
-import axios from "axios"
+import { Listen } from "rectx"
+import StoreController from "../store"
 import util from "../utils"
 import "./Detail.less"
 import Loading from "../components/Loading"
 
-class Detail extends Component {
+class DetailInner extends Component {
   //state
   constructor(props) {
     super(props);
     this.state = {
-      autoPlay: !0,
-      lyricHeight: 0,
-      ids: [],
-      timer: -1,
-      isPaused: !0,
-      line: 1e-3,
-      duration: 0,
-      currentTime: 0,
-      song: {
-        id: -1,
-        name: null,
-        artist: null,
-        url: null,
-        picUrl: require("../assets/disc_default.png"),
-        lyric: ""
-      }
+      lyricHeight: 0
     };
-    this.$_SongToggle = this.$_SongToggle.bind(this);
-    this.$_SongJump = this.$_SongJump.bind(this);
   }
 
   // lifecycle
@@ -35,124 +19,19 @@ class Detail extends Component {
     let height = window.screen.availHeight / 2 - 128;
     height = ~~((height - 43) / 32) * 32 + 43; // LH 32 PT 43
     this.setState({ lyricHeight: height > 139 ? height : 139 });
-    this.$_Init();
-    this.timerID = setInterval(() => this.$_StartTimer(), 1e3);
-  }
-  componentWillUnmount() {
-    clearInterval(this.timerID);
-  }
-
-  // methods
-  $_Init() {
-    const id = this.props.match.params.id;
-    if (id) {
-      if (this.state.ids.join(",").indexOf(id) === -1) {
-        this.setState({ line: 1e-3 });
-      }
-      this.setState({ ids: id.split(",") });
-      this.$_GetDetail(id.split(",")[0]);
-    }
-  }
-  $_StartTimer() {
-    const duration = this.refs.audio.duration;
-    const currentTime = this.refs.audio.currentTime;
-    duration && this.setState({ duration: duration });
-    currentTime && this.setState({ currentTime: currentTime });
-    if (duration > 0 && this.state.autoPlay) {
-      this.setState({ autoPlay: !1 });
-      this.$_SongPlay();
-    }
-    if (currentTime >= duration) {
-      this.$_SongPause();
-      this.state.ids.length > 1 && this.$_SongNext();
-    }
-    const lrc = this.$_FormatLrc(this.state.song.lyric);
-    lrc.push({ time: duration * 1e3 });
-    if (currentTime < lrc[0].time / 1e3) {
-      this.setState({ line: 1e-3 });
-    } else {
-      for (let i = 0; i < lrc.length - 1; i++) {
-        if (currentTime >= lrc[i].time / 1e3 && currentTime < lrc[i + 1].time / 1e3) {
-          this.setState({ line: i });
-        }
-      }
-    }
-  }
-  $_SongPlay() {
-    if (this.state.duration > 0) {
-      this.refs.audio
-        .play()
-        .then(() => {
-          this.setState({ isPaused: !1 });
-        })
-        .catch(err => {
-          console.warn(err);
-        });
-    }
-  }
-  $_SongPause() {
-    this.refs.audio.pause();
-    this.setState({ isPaused: !0 });
-  }
-  $_SongToggle() {
-    this.state.isPaused ? this.$_SongPlay() : this.$_SongPause();
-  }
-  $_SongLoad() {
-    this.refs.audio.load();
-  }
-  $_SongJump() {
-    const currentTime = this.refs.range.value;
-    this.setState({ currentTime: currentTime });
-    if (currentTime < this.state.duration) {
-      this.refs.audio.currentTime = currentTime;
-    }
-  }
-  $_SongNext() {
-    this.setState({ duration: 0 });
-    this.state.ids.splice(0, 1);
-    this.state.ids.push(this.state.song.id);
-    this.$_GetDetail(this.state.ids[0]);
-  }
-  $_GetDetail(id) {
-    axios.get(`${util.baseUrl}/detail?id=${id}`)
-      .then(res => {
-        this.setState({ song: res.data });
-        this.setState({ autoPlay: !0 });
-        localStorage.history = this.state.ids.join(",");
-      })
-      .catch(err => {
-        console.error(err);
-      });
-  }
-  $_FormatLrc(lrc) {
-    lrc = lrc.replace(/(\[\d{2,}:\d{2}(?:\.\d{2,3})?]){2,}(.*)(\n)/g, (match, _, txt) => {
-      return match.replace(`${txt}\n`, "").replace(/(\[\d{2,}:\d{2}(?:\.\d{2,3})?])/g, `$1${txt}\n`);
-    }).split("\n");
-    const timeExp = /\[(\d{2,}):(\d{2})(?:\.(\d{2,3}))?]/g;
-    const lines = [];
-    for (let i = 0; i < lrc.length; i++) {
-      const result = timeExp.exec(lrc[i]);
-      const txt = lrc[i].replace(timeExp, "").trim();
-      if (result && txt) {
-        lines.push({ time: result[1] * 60 * 1000 + result[2] * 1000 + (result[3] || 0) * 10, txt });
-      }
-    }
-    lines.sort((a, b) => {
-      return a.time - b.time;
-    });
-    return lines;
+    this.props.store.$_Init(this.props.id);
   }
 
   render() {
     // computed
     const rangeStyle = () => {
-      const percent = ~~(this.state.currentTime / this.state.duration * 100) + 1;
+      const percent = ~~(this.props.store.state.currentTime / this.props.store.state.duration * 100) + 1;
       const color = "rgba(255, 255, 255, 0.2)";
       return `linear-gradient(to right, ${color}, #fff ${percent}%, ${color} ${percent}%, ${color})`;
     }
     const rangeTxt = () => {
-      const currentTime = ~~this.state.currentTime;
-      const duration = ~~this.state.duration;
+      const currentTime = ~~this.props.store.state.currentTime;
+      const duration = ~~this.props.store.state.duration;
       return `${util.fillZero(
         ~~((currentTime / 60) % 60)
       )}:${util.fillZero(currentTime % 60)}/${util.fillZero(
@@ -163,32 +42,43 @@ class Detail extends Component {
     // template
     return (
       <div className="detail">
-        {this.state.duration === 0 && <Loading />}
+        {this.props.store.state.duration === 0 && <Loading />}
         <div className="song_wrap">
-          <div className={`song_disc${this.state.isPaused ? " song_needle" : ""}`} onClick={this.$_SongToggle}>
-            <div className={`song_turn song_rotate${this.state.isPaused ? " song_paused" : ""}`}>
-              <img src={this.state.song.picUrl} alt="Song Cover" className="song_cover" />
+          <div className={`song_disc${this.props.store.state.isPaused ? " song_needle" : ""}`} onClick={() => this.props.store.$_SongToggle()}>
+            <div className={`song_turn song_rotate${this.props.store.state.isPaused ? " song_paused" : ""}`}>
+              <img src={this.props.store.state.song.picUrl} alt="Song Cover" className="song_cover" />
             </div>
-            <span className={`song_play${!this.state.isPaused || this.state.duration === 0 ? " song_pause" : ""}`}></span>
+            <span className={`song_play${!this.props.store.state.isPaused || this.props.store.state.duration === 0 ? " song_pause" : ""}`}></span>
           </div>
         </div>
-        {this.state.song.name && this.state.song.artist && <div className="song_range">
+        {this.props.store.state.song.name && this.props.store.state.song.artist && <div className="song_range">
           <small>{rangeTxt()}</small>
-          <input ref="range" type="range" value={this.state.currentTime} max={this.state.duration} style={{ background: rangeStyle() }} onChange={this.$_SongJump} />
+          <input ref="range" type="range" value={this.props.store.state.currentTime} max={this.props.store.state.duration} style={{ background: rangeStyle() }} onChange={() => this.props.store.$_SongJump(this.refs.range.value)} />
         </div>}
-        {this.state.song.name && this.state.song.artist && this.state.lyricHeight > 0 && <div className="lyric" style={{ height: `${this.state.lyricHeight}px` }}>
-          <h3>{this.state.song.name} - {this.state.song.artist}</h3>
+        {this.props.store.state.song.name && this.props.store.state.song.artist && this.state.lyricHeight > 0 && <div className="lyric" style={{ height: `${this.state.lyricHeight}px` }}>
+          <h3>{this.props.store.state.song.name} - {this.props.store.state.song.artist}</h3>
           <div className="lyric_txt">
-            <ul style={{ marginTop: `-${~~this.state.line * 2}em` }}>
-              {this.$_FormatLrc(this.state.song.lyric).map((v, i) =>
-                <li key={i} className={this.state.line === i ? "hover" : ""}>{v.txt}</li>
+            <ul style={{ marginTop: `-${~~this.props.store.state.line * 2}em` }}>
+              {this.props.store.formatLrc().map((v, i) =>
+                <li key={i} className={this.props.store.state.line === i ? "hover" : ""}>{v.txt}</li>
               )}
             </ul>
           </div>
         </div>}
-        <audio ref="audio" src={this.state.song.url} preload="!0"></audio>
-        <div className="song_bg" style={{ backgroundImage: `url(${this.state.song.picUrl})` }}></div>
+        <div className="song_bg" style={{ backgroundImage: `url(${this.props.store.state.song.picUrl})` }}></div>
       </div >
+    );
+  }
+}
+
+class Detail extends Component {
+  render() {
+    return (
+      <Listen to={[StoreController]}>
+        {store => (
+          <DetailInner store={store} id={this.props.match.params.id} />
+        )}
+      </Listen>
     );
   }
 }
