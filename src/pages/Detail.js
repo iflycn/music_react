@@ -32,7 +32,7 @@ class DetailInner extends Component {
 
   // lifecycle
   componentDidMount() {
-    let height = window.screen.availHeight / 2 - 128;
+    let height = document.body.offsetHeight / 2 - 128;
     height = ~~((height - 43) / 32) * 32 + 43; // LH 32 PT 43
     this.setState({ lyricHeight: height > 139 ? height : 139 });
     this.props.store.$_Init(this.props.id);
