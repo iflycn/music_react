@@ -42,12 +42,10 @@ class AudioInner extends Component {
     duration && this.props.store.setDuration(duration);
     currentTime && this.props.store.setCurrentTime(currentTime);
     if (duration > 5 && this.state.autoPlay) {
-      this.setState({ autoPlay: !1 });
       this.$_SongPlay();
     }
     if (currentTime >= duration) {
-      this.$_SongPause();
-      this.props.store.state.ids.length > 1 && this.$_SongNext();
+      this.props.store.state.ids.length > 1 ? this.$_SongNext() : this.$_SongPause();
     }
     if (!this.props.store.state.isPaused) {
       const lrc = this.props.store.formatLrc();
@@ -74,10 +72,11 @@ class AudioInner extends Component {
       });
   }
   $_SongPlay() {
-    if (this.props.store.state.duration > 0) {
+    if (this.props.store.state.duration > 5) {
       this.refs.audio
         .play()
         .then(() => {
+          this.setState({ autoPlay: !1 });
           this.props.store.setIsPaused(!1);
         })
         .catch(err => {
@@ -96,8 +95,8 @@ class AudioInner extends Component {
     this.refs.audio.load();
   }
   $_SongJump(value) {
-    this.props.store.setCurrentTime(value);
     if (value < this.props.store.state.duration) {
+      this.props.store.setCurrentTime(value);
       this.refs.audio.currentTime = value;
     }
   }
@@ -110,8 +109,9 @@ class AudioInner extends Component {
   $_GetDetail(id) {
     axios.get(`${util.baseUrl}/detail?id=${id}`)
       .then(res => {
-        this.props.store.setSong(res.data);
-        this.setState({ autoPlay: !0 });
+        this.props.store.setSong(res.data, () => {
+          this.setState({ autoPlay: !0 });
+        });
         localStorage.history = this.props.store.state.ids.join(",");
       })
       .catch(err => {

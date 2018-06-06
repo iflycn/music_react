@@ -22,7 +22,7 @@ class HomeInner extends Component {
 
   // lifecycle
   componentDidMount() {
-    this.props.store.state.ids.length === 0 && window.addEventListener("touchend", this.$_FixAutoplay);
+    this.props.store.state.song.url || window.addEventListener("touchend", this.$_FixAutoplay);
     window.addEventListener("scroll", this.$_SetScrollTop);
     this.setState({ history: localStorage.history });
     this.$_GetList();

@@ -10,5 +10,5 @@ console.log(
 
 ReactDOM.render(
   <App />,
-  document.getElementById("app")
+  document.getElementById("root")
 );

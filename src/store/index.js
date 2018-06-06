@@ -50,28 +50,27 @@ class StoreController extends Controller {
 
   // mutations
   resetAll = () => {
-    this.setState({ isPaused: !0 });
     this.setState({ line: 1e-3 });
     this.setState({ duration: 0 });
     this.setState({ currentTime: 0 });
   }
-  setIds = payload => {
-    this.setState({ ids: payload });
+  setIds = (payload, f = () => { }) => {
+    this.setState({ ids: payload }, f());
   }
-  setIsPaused = payload => {
-    this.setState({ isPaused: payload });
+  setIsPaused = (payload, f = () => { }) => {
+    this.setState({ isPaused: payload }, f());
   }
-  setLine = payload => {
-    this.setState({ line: payload });
+  setLine = (payload, f = () => { }) => {
+    this.setState({ line: payload }, f());
   }
-  setDuration = payload => {
-    this.setState({ duration: payload });
+  setDuration = (payload, f = () => { }) => {
+    this.setState({ duration: payload }, f());
   }
-  setCurrentTime = payload => {
-    this.setState({ currentTime: payload });
+  setCurrentTime = (payload, f = () => { }) => {
+    this.setState({ currentTime: payload }, f());
   }
-  setSong = payload => {
-    this.setState({ song: payload });
+  setSong = (payload, f = () => { }) => {
+    this.setState({ song: payload }, f());
   }
 }
 
