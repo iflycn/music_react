@@ -10,7 +10,8 @@ class AudioInner extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      autoPlay: !0
+      autoPlay: !0,
+      minDuration: 3
     };
     this.props.store.$_Init = this.$_Init.bind(this);
     this.props.store.$_FixAutoplay = this.$_FixAutoplay.bind(this);
@@ -41,10 +42,10 @@ class AudioInner extends Component {
     const currentTime = this.refs.audio.currentTime;
     duration && this.props.store.setDuration(duration);
     currentTime && this.props.store.setCurrentTime(currentTime);
-    if (duration > 5 && this.state.autoPlay) {
+    if (duration > this.state.minDuration && this.state.autoPlay) {
       this.$_SongPlay();
     }
-    if (currentTime >= duration) {
+    if (duration > this.state.minDuration && currentTime >= duration) {
       this.props.store.state.ids.length > 1 ? this.$_SongNext() : this.$_SongPause();
     }
     if (!this.props.store.state.isPaused) {
@@ -72,7 +73,7 @@ class AudioInner extends Component {
       });
   }
   $_SongPlay() {
-    if (this.props.store.state.duration > 5) {
+    if (this.props.store.state.duration > this.state.minDuration) {
       this.refs.audio
         .play()
         .then(() => {

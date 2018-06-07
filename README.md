@@ -41,6 +41,7 @@ npm run build
 - [x] 歌单页显示播放状态
 - [x] 修复 BUG：因移动端限制，音乐无法自动播放
 - [x] 修复 BUG：音乐自动播放不正常
+- [x] 修复 BUG：获取音频长度异常时依然继续
 
 ## TODO
 - [ ] 已知 BUG：部分移动端浏览器中，transform: rotate 对应的 animation-play-state 属性工作不正常
